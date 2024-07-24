@@ -31,7 +31,9 @@ async function getTowerEventById() {
 <section class="container">
     <div v-if="towerEvent" class="row">
         <div class="col-10">
+            <h1>This is the details page for a single event.</h1>
             <img class="img-fluid" :src="towerEvent.coverImg" alt="">
+            {{ towerEvent.name }}
         </div>
         <div class="row">
             <div class="col-7">
