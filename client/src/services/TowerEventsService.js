@@ -5,6 +5,11 @@ import { api } from "./AxiosService.js"
 
 
 class TowerEventsService {
+  async getTowerEventById(eventId) {
+      AppState.activeTowerEvent = null
+      const response = await api.get(`api/events/${eventId}`)
+      logger.log("Are we able to get the single event", response.data)
+  }
   async getAllTowerEvents() {
     const response = await api.get('api/events')
     // logger.log("Am I getting the events?", response.data) ✅

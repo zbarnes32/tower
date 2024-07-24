@@ -4,6 +4,7 @@ import { AppState } from '../AppState.js';
 import { towerEventsService } from '../services/TowerEventsService.js';
 import Pop from '../utils/Pop.js';
 import { TowerEvent } from '../models/TowerEvent.js';
+import TowerEventDetails from '../components/TowerEventDetails.vue';
 
 const towerEvents = computed(() => AppState.towerEvents)
 
@@ -80,16 +81,8 @@ async function getAllTowerEvents(){
 <section class="container">
   <div class="row">
     <h2 class="mt-5">Upcoming Events</h2>
-    <div class="col-10 d-flex justify-content-around">
-        <!-- TODO Iterate through events -->
-        <div class="tower-event-card" v-for="towerEvent in towerEvents" :key="towerEvent.id">
-          <img :src="towerEvent.coverImg" class="tower-event-card-img" :alt="towerEvent.type">
-          <div class="card-body">
-          <h5 class="card-title text-center">{{ towerEvent.name }}</h5>
-        <!-- REVIEW Could add more event details later. Only the Image and Title are required -->
-        </div>
-
-      </div>
+    <div v-for="towerEvent in towerEvents" :key="towerEvent.id" class="col-10">
+        <TowerEventDetails :towerEvent="towerEvent"/>
     </div>
   </div>
 </section>
