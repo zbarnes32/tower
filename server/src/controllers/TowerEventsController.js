@@ -1,6 +1,7 @@
 
 import { Auth0Provider } from "@bcwdev/auth0provider";
 import BaseController from "../utils/BaseController.js";
+import { towerEventService } from "../services/TowerEventService.js";
 
 
 
@@ -17,7 +18,8 @@ async createTowerEvent(request, response, next){
         const user = request.userInfo
         const towerEventData = request.body
         towerEventData.creatorId = user.id
-        const towerEvent =
+        const towerEvent = await towerEventService.createTowerEvent(towerEventData)
+        response.send(towerEvent)
     } catch (error) {
       next(error)  
     }
