@@ -5,6 +5,12 @@ import { api } from "./AxiosService.js"
 
 
 class TowerEventsService {
+  async cancelEvent(eventId) {
+    const response = await api.delete(`api/events/${eventId}`)
+    logger.log('Cancelling the event', response.data)
+    AppState.activeTowerEvent.isCanceled = !AppState.activeTowerEvent.isCanceled
+    
+  }
   async createTowerEvent(towerEventData) {
     const response = await api.post('api/events', towerEventData)
     logger.log('Creating an event', response.data)
