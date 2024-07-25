@@ -53,8 +53,8 @@ async function cancelEvent(){
     <div v-if="towerEvent" class="row">
         <div class="col-10">
             <h1>{{ towerEvent.name }}</h1>
-            <span v-if="towerEvent.isCanceled == true">This event has been canceled</span>
-            <span v-else>This event is scheduled for {{ towerEvent.startDate }} </span>
+            <span v-if="towerEvent.isCanceled == true" class="cancel-message">This event has been canceled</span>
+            <span v-else>This event is scheduled for {{ towerEvent.startDate.toLocaleDateString() }} </span>
 
             <img class="img-fluid" :src="towerEvent.coverImg" alt="">
         </div>
@@ -103,4 +103,10 @@ async function cancelEvent(){
 
 <style lang="scss" scoped>
 
+
+.cancel-message {
+    color: red;
+    font-size: 1.5em;
+    font-weight: 700;
+}
 </style>
