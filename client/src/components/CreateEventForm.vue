@@ -18,10 +18,10 @@ const towerEventData = ref({
 
 async function createTowerEvent() {
     try {
-        await towerEventsService.createTowerEvent(towerEventData)
+        await towerEventsService.createTowerEvent(towerEventData.value)
         Pop.success('You have created an event!')
         clearForm()
-        Modal.getOrCreateInstance('#create-event-modal').hide()
+        Modal.getOrCreateInstance('#eventFormModal').hide()
     } catch (error) {
         Pop.error(error)
     }
@@ -83,7 +83,12 @@ towerEventData.value = {
     <section class="row">
         <div class="col-10">
             <label for="event-description" class="form-label">Enter the event description here...</label>
-            <textarea class="form-control" id="event-description" rows="5" name="event-description" minlength="15" maxlength="1000"></textarea>
+            <textarea v-model="towerEventData.description" class="form-control" id="event-description" rows="5" name="event-description" minlength="15" maxlength="1000"></textarea>
+        </div>
+    </section>
+    <section>
+        <div>
+            <button type="submit" class="btn btn-primary">Save changes</button>
         </div>
     </section>
 </form>
