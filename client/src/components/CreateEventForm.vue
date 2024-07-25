@@ -3,6 +3,11 @@ import { ref } from 'vue';
 import { towerEventsService } from '../services/TowerEventsService.js';
 import Pop from '../utils/Pop.js';
 import { Modal } from 'bootstrap';
+import { useRoute, useRouter } from 'vue-router';
+
+const route = useRoute()
+const router = useRouter()
+
 
 
 
@@ -18,10 +23,11 @@ const towerEventData = ref({
 
 async function createTowerEvent() {
     try {
-        await towerEventsService.createTowerEvent(towerEventData.value)
+        const newTowerEvent = await towerEventsService.createTowerEvent(towerEventData.value)
         Pop.success('You have created an event!')
         clearForm()
         Modal.getOrCreateInstance('#eventFormModal').hide()
+        router.push({name: 'Event Details', params: {eventId: newTowerEvent.id}})
     } catch (error) {
         Pop.error(error)
     }

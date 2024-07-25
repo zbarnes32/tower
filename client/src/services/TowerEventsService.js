@@ -10,6 +10,7 @@ class TowerEventsService {
     logger.log('Creating an event', response.data)
     const newTowerEvent = new TowerEvent(response.data)
     AppState.towerEvents.push(newTowerEvent)
+    return newTowerEvent
   }
   async getTowerEventById(eventId) {
       AppState.activeTowerEvent = null
