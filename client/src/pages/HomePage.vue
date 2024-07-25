@@ -5,6 +5,8 @@ import { towerEventsService } from '../services/TowerEventsService.js';
 import Pop from '../utils/Pop.js';
 import { TowerEvent } from '../models/TowerEvent.js';
 import TowerEventDetails from '../components/TowerEventDetails.vue';
+import CreateEventForm from '../components/CreateEventForm.vue';
+import ModalWrapper from '../components/ModalWrapper.vue';
 
 const towerEvents = computed(() => AppState.towerEvents)
 
@@ -55,7 +57,10 @@ async function getAllTowerEvents(){
         <div class="card-body">
           <h5 class="card-title">Start an event to invite your friends</h5>
           <p class="card-subtitle mb-2 text-muted">Create your own Tower event, and draw from a community of thousands</p>
-          <button class="btn btn-outline-success rounded pill p-1 mt-3"><i class="mdi mdi-plus"></i>Create an event</button>     
+            <button class="btn btn-outline-success rounded pill p-1 mt-3" data-bs-target="#eventFormModal" data-bs-toggle="modal"><i class="mdi mdi-plus"></i>Create an event</button>
+            <ModalWrapper id="eventFormModal">
+              <CreateEventForm/>
+            </ModalWrapper>
         </div>
       </div>
     </div>

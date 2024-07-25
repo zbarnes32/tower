@@ -5,6 +5,12 @@ import { api } from "./AxiosService.js"
 
 
 class TowerEventsService {
+  async createTowerEvent(towerEventData) {
+    const response = await api.post('api/events', towerEventData)
+    logger.log('Creating an event', response.data)
+    const newTowerEvent = new TowerEvent(response.data)
+    AppState.towerEvents.push(newTowerEvent)
+  }
   async getTowerEventById(eventId) {
       AppState.activeTowerEvent = null
       const response = await api.get(`api/events/${eventId}`)
