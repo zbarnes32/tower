@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onMounted } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { AppState } from '../AppState.js';
 import { towerEventsService } from '../services/TowerEventsService.js';
 import Pop from '../utils/Pop.js';
@@ -8,7 +8,16 @@ import TowerEventDetails from '../components/TowerEventDetails.vue';
 import CreateEventForm from '../components/CreateEventForm.vue';
 import ModalWrapper from '../components/ModalWrapper.vue';
 
-const towerEvents = computed(() => AppState.towerEvents)
+const eventTypeFilter = ref('all')
+
+const towerEvents = computed(() => {
+  if (eventTypeFilter.value == 'all'){
+    return AppState.towerEvents
+  }
+  return AppState.towerEvents.filter(towerEvent => towerEvent.type == eventTypeFilter.value)
+})
+
+const types = ['all', 'concert', 'convention', 'sport', 'digital']
 
 onMounted(() => {
   getAllTowerEvents()
@@ -71,15 +80,10 @@ async function getAllTowerEvents(){
   <h2>Explore top categories</h2>
 
   <!-- TODO Iterate through categories -->
-  <div>
-    <div class="card">
-      <img src="..." class="card-img-top" alt="...">
-      <div class="card-body">
-        <h5 class="card-title">Card title</h5>
-        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-        <a href="#" class="btn btn-primary">Go somewhere</a>
-      </div>
-    </div>
+  <div class="col-3 d-flex justify-content-around" v-for="type in types" :key="type">
+    <button @click="eventTypeFilter = type" class="text-capitalize btn-btn-primary p-3 rounded pill text-center">
+        {{ type }}
+    </button>
   </div>
 </section>
 
