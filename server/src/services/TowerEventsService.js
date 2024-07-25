@@ -33,7 +33,7 @@ class TowerEventsService {
         return towerEvents
     }
     async createTowerEvent(towerEventData) {
-        const towerEvent = await dbContext.TowerEvents.create(towerEventData)
+        const towerEvent = (await dbContext.TowerEvents.create(towerEventData))
         await towerEvent.populate('creator')
         return towerEvent
     }
