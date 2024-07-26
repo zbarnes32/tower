@@ -44,6 +44,16 @@ async function cancelEvent(){
       Pop.error(error);
     }
 }
+
+async function createTicket(){
+    try {
+      const ticketData = {eventId: route.params.eventId}
+    //   await 
+    }
+    catch (error){
+      Pop.error(error);
+    }
+}
 </script>
 
 
