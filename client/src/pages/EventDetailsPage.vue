@@ -10,6 +10,7 @@ import { logger } from '../utils/Logger.js';
 import { TowerEvent } from '../models/TowerEvent.js';
 import { accountService } from '../services/AccountService.js';
 import { Account } from '../models/Account.js';
+import { ticketsService } from '../services/TicketsService.js';
 
 
 
@@ -48,7 +49,7 @@ async function cancelEvent(){
 async function createTicket(){
     try {
       const ticketData = {eventId: route.params.eventId}
-    //   await 
+        await ticketsService.createTicket(ticketData)
     }
     catch (error){
       Pop.error(error);
@@ -86,11 +87,18 @@ async function createTicket(){
                     </form>
                 </div>
             </div>
+            <!-- TODO Add UI indication to show if the account profile has a ticket to the event -->
+            <!-- NOTE Can we compare the account profile's eventId to the activeTowerEvent's id?? -->
+            <!-- REVIEW Why isn't the capacity going down by 1 after each created ticket? -->
             <div class="col-3">
                 <div class="tickets text-center">
-                    <h4>Interested in going?</h4>
-                    <p>Grab a ticket</p>
-                    <button class="btn btn-primary">Attend</button>
+                    <div>
+                        <h4>Interested in going?</h4>
+                        <p>Grab a ticket</p>
+                    </div>
+                    <div v-if="towerEvent.isCanceled == false || towerEvent.capacity >= 1">
+                        <button @click="createTicket()" class="btn btn-primary">Get a Ticket</button>
+                    </div>
                 </div>
                 <div>
                     <h4>Attendees</h4>

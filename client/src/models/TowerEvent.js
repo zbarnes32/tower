@@ -16,5 +16,6 @@ export class TowerEvent {
         this.createdAt = new Date(data.createdAt)
         this.updatedAt = new Date(data.updatedAt)
         this.creator = new Account(data.creator)
+        this.ticketCount = data.ticketCount
     }
 }

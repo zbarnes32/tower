@@ -1,3 +1,5 @@
+import { Account } from "./Account.js"
+import { TowerEvent } from "./TowerEvent.js"
 
 
 
@@ -6,8 +8,20 @@ export class Ticket {
         this.id = data.id
         this.accountId = data.id
         this.eventId = data.eventId
-        //TODO Add in later
-        // this.profile
-        // this.event
     }
+}
+
+export class TicketProfile extends Ticket {
+    constructor(data){
+        super(data)
+        this.profile = new Account(data.profile)
+    }
+}
+
+export class TicketEvent extends Ticket {
+    constructor(data){
+        super(data)
+        this.towerEvent = new TowerEvent(data.TowerEvent)
+    }
+
 }
