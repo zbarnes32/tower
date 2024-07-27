@@ -20,8 +20,12 @@ const towerEvent = computed(() => AppState.activeTowerEvent)
 
 const account = computed(() => AppState.account)
 
+// TODO go get people that have tickets for event when this page mounts, use eventId form route params for the request, reference get AlbumMemberProfiles from postit
+
+// TODO comments are similar to pictures
 onMounted(() => {
     getTowerEventById()
+    getTicketsForEvent()
 })
 
 
@@ -37,6 +41,7 @@ async function getTowerEventById() {
 
 async function cancelEvent(){
     try {
+        // TODO if you don't want to display the confirm, check to see if the event in the appstate is
       const wantsToCancel = await Pop.confirm("Are you sure you want to cancel this event")
       if(!wantsToCancel) return
       await towerEventsService.cancelEvent(route.params.eventId)
@@ -55,6 +60,15 @@ async function createTicket(){
       Pop.error(error);
     }
 }
+
+async function getTicketsForEvent() {
+    try {
+      await ticketsService.getTicketsForEvent(route.params.eventId)
+    }
+    catch (error){
+      Pop.error(error);
+    }
+}
 </script>
 
 
@@ -68,6 +82,7 @@ async function createTicket(){
             <span v-else>This event is scheduled for {{ towerEvent.startDate.toLocaleDateString() }} </span>
 
             <img class="img-fluid" :src="towerEvent.coverImg" alt="">
+            <!-- TODO add description, location, type from towerevent -->
         </div>
         <div class="row">
             <div class="col-7">
@@ -96,7 +111,11 @@ async function createTicket(){
                         <h4>Interested in going?</h4>
                         <p>Grab a ticket</p>
                     </div>
-                    <div v-if="towerEvent.isCanceled == false || towerEvent.capacity >= 1">
+                    <!-- FIXME capacity isn't the only thing we need to look at here, we need to compare the ticketCount -->
+                    <div>
+                        <p>Tickets Remaining: {{ towerEvent.capacity - towerEvent.ticketCount }}</p>
+                    </div>
+                    <div v-if="towerEvent.isCanceled == false">
                         <button @click="createTicket()" class="btn btn-primary">Get a Ticket</button>
                     </div>
                 </div>

@@ -79,6 +79,8 @@ towerEventData.value = {
         </div>
         <div class="col-3 mb-3">
             <label for="event-date">Date</label>
+
+            <!-- FIXME use a datepicker here -->
             <input v-model="towerEventData.startDate" type="text" class="form-control" id="event-date" name="event-date" minlength="1" maxlength="500" required>
         </div>
         <div class="col-3 mb-3">
