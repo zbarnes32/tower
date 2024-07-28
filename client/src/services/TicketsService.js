@@ -17,8 +17,9 @@ class TicketsService {
       const response = await api.get('account/tickets')
       logger.log("Getting all of the tickets for a single account", response.data)
       const eventTickets = response.data.map(ticketData => new TicketEvent(ticketData))
-      logger.log("Are we still working?")
+    //   logger.log("Are we still working?", eventTickets)
       AppState.accountEvents = eventTickets
+    //   logger.log('Testing', AppState.accountEvents)
     }
     async createTicket(ticketData) {
         const response = await api.post('api/tickets', ticketData)

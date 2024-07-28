@@ -24,7 +24,8 @@ const account = computed(() => AppState.account)
 
 const eventProfiles = computed(() => AppState.eventProfiles)
 
-const ticketHolder = computed(() => AppState.eventProfiles.find(ticket => ticket.eventId == AppState.activeTowerEvent.id))
+const ticketHolder = computed(() => AppState.eventProfiles.find(ticket => ticket.accountId == AppState.account.id))
+
 
 // TODO go get people that have tickets for event when this page mounts, use eventId form route params for the request, reference get AlbumMemberProfiles from postit
 
@@ -85,6 +86,7 @@ async function getTicketsForEvent() {
         <div class="col-10">
             <h1>{{ towerEvent.name }}</h1>
             <span v-if="towerEvent.isCanceled == true" class="cancel-message">This event has been canceled</span>
+            <span v-else-if="towerEvent.capacity == towerEvent.ticketCount" class="sold-out-message">This event is sold out</span>
             <span v-else>This event is scheduled for {{ towerEvent.startDate.toLocaleDateString() }} </span>
 
             <img class="img-fluid" :src="towerEvent.coverImg" alt="">
@@ -112,6 +114,7 @@ async function getTicketsForEvent() {
             <!-- NOTE Can we compare the account profile's eventId to the activeTowerEvent's id?? -->
             <div class="col-3">
                 <div class="tickets text-center">
+                    <!-- FIXME Logic doesn't work here -->
                     <div v-if="ticketHolder">
                         <h4>You are attending this event!</h4>
                     </div>
@@ -119,13 +122,16 @@ async function getTicketsForEvent() {
                         <h4>Interested in going?</h4>
                         <p>Grab a ticket</p>
                     </div>
-                    <!-- FIXME capacity isn't the only thing we need to look at here, we need to compare the ticketCount -->
                     <div>
                         <p>Tickets Remaining: {{ towerEvent.capacity - towerEvent.ticketCount }}</p>
                     </div>
-                    <div v-if="towerEvent.isCanceled == false">
-                        <button @click="createTicket()" class="btn btn-primary">Get a Ticket</button>
+                    <div v-if="towerEvent.isCanceled == true">
+                        <button disabled @click="createTicket()" class="btn btn-primary">Get a Ticket</button>
                     </div>
+                    <div v-else-if="towerEvent.capacity <= towerEvent.ticketCount">
+                        <button disabled @click="createTicket()" class="btn btn-primary">Get a Ticket</button>
+                    </div>
+                    <div v-else><button @click="createTicket()" class="btn btn-primary">Get a Ticket</button></div>
                 </div>
             </div>
         </div>
@@ -157,6 +163,12 @@ async function getTicketsForEvent() {
 
 
 .cancel-message {
+    color: red;
+    font-size: 1.5em;
+    font-weight: 700;
+}
+
+.sold-out-message {
     color: red;
     font-size: 1.5em;
     font-weight: 700;
