@@ -11,6 +11,7 @@ class TicketsService {
         const response = await api.get(`api/events/${eventId}/tickets`)
         logger.log('Getting all of the tickets for an event', response.data)
         const ticketProfiles = response.data.map(ticketData => new TicketProfile(ticketData))
+        logger.log('TicketProfile:', ticketProfiles)
         AppState.eventProfiles = ticketProfiles
     }
     async getAccountTicketsForEvents() {

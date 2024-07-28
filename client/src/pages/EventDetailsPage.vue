@@ -24,7 +24,9 @@ const account = computed(() => AppState.account)
 
 const eventProfiles = computed(() => AppState.eventProfiles)
 
-const ticketHolder = computed(() => AppState.eventProfiles.find(ticket => ticket.accountId == AppState.account.id))
+const ticketHolder = computed(() => AppState.eventProfiles.find(ticket => ticket.accountId == AppState.account.id)
+ 
+)
 
 
 // TODO go get people that have tickets for event when this page mounts, use eventId form route params for the request, reference get AlbumMemberProfiles from postit
