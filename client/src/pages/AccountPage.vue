@@ -13,6 +13,15 @@ onMounted(() => getAccountTicketsForEvents())
 
 // TODO get your events you have tickets for when this page mounts, reference getAlbumMemberAlbums from posit
 
+async function deleteTicket(ticketId){
+  try {
+    const wantsToDelete = await Pop.confirm("Are you sure that you no longer what this ticket?")
+    await ticketsService.deleteTicket(ticketId)
+  } catch (error) {
+    Pop.error(error)
+  }
+}
+
 
 async function getAccountTicketsForEvents() {
   try {
@@ -35,6 +44,7 @@ async function getAccountTicketsForEvents() {
           <div v-for="accountEvent in accountEvents" :key="accountEvent.id" class="col-md-4">
             {{accountEvent.towerEvent.name }}
             <TowerEventDetails :towerEvent="accountEvent.towerEvent"/>
+            <button @click="deleteTicket(accountEvent.id)" class="btn btn-danger">Delete Ticket</button>
           </div>
         </div>
       </section>

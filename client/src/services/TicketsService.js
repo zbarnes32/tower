@@ -7,6 +7,12 @@ import { api } from "./AxiosService.js"
 
 
 class TicketsService {
+    async deleteTicket(ticketId) {
+      const response = await api.delete(`api/tickets/${ticketId}`)
+      logger.log('ticket to delete', response.data)
+      const ticketIndexToDelete = AppState.accountEvents.findIndex(ticket => ticket.id == ticketId)
+      AppState.accountEvents.splice(ticketIndexToDelete, 1)
+    }
     async getTicketsForEvent(eventId) {
         const response = await api.get(`api/events/${eventId}/tickets`)
         logger.log('Getting all of the tickets for an event', response.data)
