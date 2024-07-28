@@ -15,10 +15,11 @@ class TicketsService {
     }
     async getAccountTicketsForEvents() {
       const response = await api.get('account/tickets')
-      logger.log("Getting all of the tickets for a single account")
+      logger.log("Getting all of the tickets for a single account", response.data)
+    //   FIXME: Need to fix error Cannot read properties of undefined (reading 'id')
       const eventTickets = response.data.map(ticketData => new TicketEvent(ticketData))
+      logger.log("Are we still working?")
       AppState.accountEvents = eventTickets
-
     }
     async createTicket(ticketData) {
         const response = await api.post('api/tickets', ticketData)

@@ -20,6 +20,8 @@ const towerEvent = computed(() => AppState.activeTowerEvent)
 
 const account = computed(() => AppState.account)
 
+const eventProfiles = computed(() => AppState.eventProfiles)
+
 // TODO go get people that have tickets for event when this page mounts, use eventId form route params for the request, reference get AlbumMemberProfiles from postit
 
 // TODO comments are similar to pictures
@@ -119,21 +121,27 @@ async function getTicketsForEvent() {
                         <button @click="createTicket()" class="btn btn-primary">Get a Ticket</button>
                     </div>
                 </div>
-                <div>
-                    <h4>Attendees</h4>
-                    <!-- Attendees Section -->
-                    <div>
-
-                    </div>
-                </div>
             </div>
-
         </div>
     </div>
     <div v-else>
         <h2><i class="mdi mdi-loading mdi-spin"></i>Loading</h2>
     </div>
+
+     <!-- Attendees Section -->
+    <div class="row">
+        <div class="col-md-4">
+            <h4>Event Attendees</h4>
+            <div class="row g-1">
+                <div v-for="ticket in eventProfiles" :key="ticket.id" class="col-md-4">
+                    <img class="img-fluid" :src="ticket.profile.picture" alt="Profile Picture">
+                    <p class="fs-5">{{ ticket.profile.name }}</p>
+                </div>          
+            </div>
+        </div>
+    </div>
 </section>
+
 
 </template>
 

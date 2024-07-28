@@ -3,7 +3,7 @@ import { Account } from "./Account.js"
 
 export class TowerEvent {
     constructor(data){
-        this.id = data._id
+        this.id = data.id
         this.creatorId = data.creatorId
         this.name = data.name
         this.description = data.description
@@ -15,7 +15,7 @@ export class TowerEvent {
         this.type = data.type
         this.createdAt = new Date(data.createdAt)
         this.updatedAt = new Date(data.updatedAt)
-        this.creator = new Account(data.creator)
+        this.creator = data.creator ? new Account(data.creator) : null
         this.ticketCount = data.ticketCount
     }
 }
