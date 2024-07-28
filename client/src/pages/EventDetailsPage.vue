@@ -11,6 +11,8 @@ import { TowerEvent } from '../models/TowerEvent.js';
 import { accountService } from '../services/AccountService.js';
 import { Account } from '../models/Account.js';
 import { ticketsService } from '../services/TicketsService.js';
+import { Ticket } from '../models/Ticket.js';
+import App from '../App.vue';
 
 
 
@@ -21,6 +23,8 @@ const towerEvent = computed(() => AppState.activeTowerEvent)
 const account = computed(() => AppState.account)
 
 const eventProfiles = computed(() => AppState.eventProfiles)
+
+const ticketHolder = computed(() => AppState.eventProfiles.find(ticket => ticket.eventId == AppState.activeTowerEvent.id))
 
 // TODO go get people that have tickets for event when this page mounts, use eventId form route params for the request, reference get AlbumMemberProfiles from postit
 
@@ -106,10 +110,12 @@ async function getTicketsForEvent() {
             </div>
             <!-- TODO Add UI indication to show if the account profile has a ticket to the event -->
             <!-- NOTE Can we compare the account profile's eventId to the activeTowerEvent's id?? -->
-            <!-- REVIEW Why isn't the capacity going down by 1 after each created ticket? -->
             <div class="col-3">
                 <div class="tickets text-center">
-                    <div>
+                    <div v-if="ticketHolder">
+                        <h4>You are attending this event!</h4>
+                    </div>
+                    <div v-else>
                         <h4>Interested in going?</h4>
                         <p>Grab a ticket</p>
                     </div>
@@ -133,6 +139,7 @@ async function getTicketsForEvent() {
         <div class="col-md-4">
             <h4>Event Attendees</h4>
             <div class="row g-1">
+                <!-- TODO Only show attendee once, even if they have multiple tickets -->
                 <div v-for="ticket in eventProfiles" :key="ticket.id" class="col-md-4">
                     <img class="img-fluid" :src="ticket.profile.picture" alt="Profile Picture">
                     <p class="fs-5">{{ ticket.profile.name }}</p>
