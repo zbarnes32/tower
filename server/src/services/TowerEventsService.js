@@ -1,5 +1,5 @@
 import { dbContext } from "../db/DbContext.js"
-import { Forbidden } from "../utils/Errors.js"
+import { BadRequest, Forbidden } from "../utils/Errors.js"
 
 
 class TowerEventsService {
@@ -10,8 +10,13 @@ class TowerEventsService {
         await eventToDestroy.save()
         return `${eventToDestroy.name} has been canceled.`
     }
-    async editTowerEvent(eventId, updatedData) {
+    async editTowerEvent(eventId, updatedData, userId) {
         const originalEvent = await dbContext.TowerEvents.findById(eventId)
+        if(originalEvent.isCanceled){
+            throw new BadRequest('Unable to edit canceled event')
+        } else if (userId != originalEvent.creatorId) {
+            throw new Forbidden('Unable to edit an event you are not the creator of.')
+        }
         originalEvent.name = updatedData.name || originalEvent.name
         originalEvent.description = updatedData.description || originalEvent.description
         originalEvent.startDate = updatedData.startDate || originalEvent.startDate

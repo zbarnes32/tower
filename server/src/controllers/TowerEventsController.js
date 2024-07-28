@@ -3,6 +3,7 @@ import { Auth0Provider } from "@bcwdev/auth0provider";
 import BaseController from "../utils/BaseController.js";
 import { towerEventsService } from "../services/TowerEventsService.js";
 import { ticketsService } from "../services/TicketsService.js";
+import { commentsService } from "../services/CommentsService.js";
 
 
 
@@ -13,12 +14,23 @@ export class TowerEventsController extends BaseController {
             .get('', this.getAllTowerEvents)
             .get('/:eventId', this.getTowerEventById)
             .get('/:eventId/tickets', this.getTicketsByEventId)
+            .get('/:eventId/comments', this.getEventComments)
             .use(Auth0Provider.getAuthorizedUserInfo)
             .post('', this.createTowerEvent)
             .put('/:eventId', this.editTowerEvent)
             .delete('/:eventId', this.destroyEvent)
             
     }
+    async getEventComments(request, response, next) {
+        try{
+            const eventId = request.params.eventId
+            const comments = await commentsService.getEventComments(eventId)
+            response.send(comments)
+        } catch(error){
+            next(error)
+        }
+    }
+
     async getTicketsByEventId(request, response, next) {
         try {
             const eventId =  request.params.eventId
@@ -28,6 +40,7 @@ export class TowerEventsController extends BaseController {
             next(error)
         }
     }
+
     async destroyEvent(request, response, next) {
         try {
             const user = request.userInfo
@@ -40,9 +53,10 @@ export class TowerEventsController extends BaseController {
     }
     async editTowerEvent(request, response, next) {
         try {
+            const user = request.userInfo
             const eventId = request.params.eventId
             const updatedData = request.body
-            const towerEvent = await towerEventsService.editTowerEvent(eventId, updatedData)
+            const towerEvent = await towerEventsService.editTowerEvent(eventId, updatedData, user.id)
             response.send(towerEvent)
         } catch (error) {
             next(error)
