@@ -50,7 +50,7 @@ const comments = computed(() => AppState.eventComments)
 onMounted(() => {
     getTowerEventById()
     getTicketsForEvent()
-    // getEventComments()
+    getEventComments()
 })
 
 
@@ -103,6 +103,16 @@ async function getEventComments(){
       Pop.error(error);
     }
 }
+
+async function deleteComment(commentId){
+    try {
+      const wantsToDelete = await Pop.confirm("Are you sure?")
+      await commentsService.deleteComment(commentId)
+    }
+    catch (error){
+      Pop.error(error);
+    }
+}
 </script>
 
 
@@ -111,7 +121,7 @@ async function getEventComments(){
 <section class="container">
     <div v-if="towerEvent" class="row">
         <div class="col-10">
-            <h1>{{ towerEvent.name }}</h1>
+            <h1 class="text-center">{{ towerEvent.name }}</h1>
             <span v-if="towerEvent.isCanceled == true" class="cancel-message">This event has been canceled</span>
             <span v-else-if="towerEvent.capacity == towerEvent.ticketCount" class="sold-out-message">This event is sold out</span>
             <span v-else>This event is scheduled for {{ towerEvent.startDate.toLocaleDateString() }} </span>
@@ -135,6 +145,9 @@ async function getEventComments(){
                         <img class="img-fluid" :src="comment.creator.picture" alt="Profile Picture">
                         <p class="fs-5">{{ comment.creator.name }}</p>
                         <p>{{ comment.body }}</p>
+                        <div v-if="comment.creatorId == AppState.account.id">
+                            <button class="btn btn-danger" @click="deleteComment(comment.id)">Delete Comment</button>
+                        </div>
                     </div>  
                 </div>
             </div>
