@@ -53,7 +53,7 @@ async function getAllTowerEvents(){
     <div class="pb-4">
       <h2 class="text-center">How Tower Works</h2>
     </div>
-    <div class="col-4">
+    <div class="col-md-4 mt-1">
       <div class="card hiw-card">
         <div class="card-body">
           <h5 class="card-title"><i class="mdi mdi-magnify"></i>   Discover events near you</h5>
@@ -61,7 +61,7 @@ async function getAllTowerEvents(){
         </div>
       </div>
     </div>
-    <div class="col-4">
+    <div class="col-md-4 mt-1">
       <div class="card hiw-card">
         <div class="card-body">
           <h5 class="card-title">Start an event to invite your friends</h5>
@@ -98,7 +98,7 @@ async function getAllTowerEvents(){
       <h2 class="mb-3">Upcoming Events</h2>
       <hr/>
     </div>
-    <div v-for="towerEvent in towerEvents" :key="towerEvent.id" class="col-3">
+    <div v-for="towerEvent in towerEvents" :key="towerEvent.id" class="col-md-3 col-12">
         <TowerEventDetails :towerEvent="towerEvent"/>
     </div>
   </div>
