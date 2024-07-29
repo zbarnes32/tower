@@ -51,22 +51,24 @@ async function getAllTowerEvents(){
 <section class="container">
   <div class="row d-flex justify-content-around mt-3">
     <div class="pb-4">
-      <h2>How Tower Works</h2>
+      <h2 class="text-center">How Tower Works</h2>
     </div>
     <div class="col-4">
-      <div class="card">
+      <div class="card hiw-card">
         <div class="card-body">
-          <h5 class="card-title"><i class="mdi mdi-magnify"></i>Discover events you are interested in</h5>
+          <h5 class="card-title"><i class="mdi mdi-magnify"></i>   Discover events near you</h5>
           <p class="card-subtitle mb-2 text-muted">Browse through community hosted events for all the things you love</p>
         </div>
       </div>
     </div>
     <div class="col-4">
-      <div class="card">
+      <div class="card hiw-card">
         <div class="card-body">
           <h5 class="card-title">Start an event to invite your friends</h5>
           <p class="card-subtitle mb-2 text-muted">Create your own Tower event, and draw from a community of thousands</p>
-            <button class="btn btn-outline-success rounded pill p-1 mt-3" data-bs-target="#eventFormModal" data-bs-toggle="modal"><i class="mdi mdi-plus"></i>Create an event</button>
+          <div class="text-end">
+            <button class="btn btn-outline-primary rounded pill p-1 mt-3" data-bs-target="#eventFormModal" data-bs-toggle="modal"><i class="mdi mdi-plus"></i>Create an event</button>
+          </div>
             <ModalWrapper id="eventFormModal">
               <CreateEventForm/>
             </ModalWrapper>
@@ -77,20 +79,26 @@ async function getAllTowerEvents(){
 </section>
 
 <section class="container">
-  <h2>Explore top categories</h2>
-
-  <!-- TODO Iterate through categories -->
-  <div class="col-3 d-flex justify-content-around" v-for="type in types" :key="type">
-    <button @click="eventTypeFilter = type" class="text-capitalize btn-btn-primary p-3 rounded pill text-center">
-        {{ type }}
-    </button>
+  <div class="row mt-5 justify-content-around">
+    <div class="col-12">
+      <h2 class="text-center">Explore Top Categories</h2>
+      <hr/>
+    </div>
+    <div class="col-md-2 mt-3" v-for="type in types" :key="type">
+      <button @click="eventTypeFilter = type" class="text-capitalize btn btn-primary p-3 rounded pill text-center type-buttons">
+          {{ type }}
+      </button>
+    </div>
   </div>
 </section>
 
 <section class="container">
-  <div class="row">
-    <h2 class="mt-5">Upcoming Events</h2>
-    <div v-for="towerEvent in towerEvents" :key="towerEvent.id" class="col-10">
+  <div class="row mt-5 justify-content-around">
+    <div class="text-center">
+      <h2 class="mb-3">Upcoming Events</h2>
+      <hr/>
+    </div>
+    <div v-for="towerEvent in towerEvents" :key="towerEvent.id" class="col-3">
         <TowerEventDetails :towerEvent="towerEvent"/>
     </div>
   </div>
@@ -105,7 +113,7 @@ async function getAllTowerEvents(){
   background-image: url(https://s3-alpha-sig.figma.com/img/de71/12a0/0a7ec0092896027294a687cb102512de?Expires=1722816000&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=edaDOMurT1-sTq2NbsOsdZxKSdtVv56sUysEiFjVz8Kt-g9vuPXdLtWuKkGfxZrbsmpiqFF0ri~n1dtL~uqKGmOHLMOqZc89vHLywqFBWCn29VFl15LeQKO96BlbpOqGGn9gpyo-hybN2cMeuTzTaV3e4WSNN~9fc0FTNF-oGiQuxBKq6OlMVWgrGdKqYutrDzJQj5u2fkTyCX7Y17ecT4g5bry4BGnEhLR6HHBxfjbSbItbvjbvUj3TEtGaXt1flJ79e3M8BI~GIR6UAuim3uGx5eozG7Qg9Tw1Ntadmbe8n~AJ2GKW2oPWrla34eHxPOTIqvMEiovk8B05MQ-H3Q__);
   background-position: center;
   background-size: cover;
-  height: 40vh;
+  height: 60vh;
 }
 
 .tower-event-card{
@@ -121,5 +129,15 @@ async function getAllTowerEvents(){
   object-position: center;
   width: 100%;
 
+}
+
+.hiw-card{
+  height: 10em;
+}
+
+.type-buttons{
+  width: 10em;
+  font-size: 1em;
+  font-weight: 600;
 }
 </style>
