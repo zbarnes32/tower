@@ -128,6 +128,9 @@ async function deleteComment(commentId){
 
             <img class="img-fluid" :src="towerEvent.coverImg" alt="">
             <!-- TODO add description, location, type from towerevent -->
+            <p>{{ towerEvent.description }}</p>
+            <p>{{ towerEvent.location }}</p>
+            <p>{{ towerEvent.type }}</p>
         </div>
         <div class="row">
             <div class="col-7">
