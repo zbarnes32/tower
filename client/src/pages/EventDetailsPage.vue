@@ -107,6 +107,7 @@ async function getEventComments(){
 async function deleteComment(commentId){
     try {
       const wantsToDelete = await Pop.confirm("Are you sure?")
+      if(!wantsToDelete) return
       await commentsService.deleteComment(commentId)
     }
     catch (error){
@@ -120,20 +121,23 @@ async function deleteComment(commentId){
 
 <section class="container">
     <div v-if="towerEvent" class="row">
-        <div class="col-10">
-            <h1 class="text-center">{{ towerEvent.name }}</h1>
-            <span v-if="towerEvent.isCanceled == true" class="cancel-message">This event has been canceled</span>
-            <span v-else-if="towerEvent.capacity == towerEvent.ticketCount" class="sold-out-message">This event is sold out</span>
-            <span v-else>This event is scheduled for {{ towerEvent.startDate.toLocaleDateString() }} </span>
+        <div class="col-12">
+            <h1 class="text-center my-3">{{ towerEvent.name }}</h1>
+            <div class="mb-2">
+                <span v-if="towerEvent.isCanceled == true" class="cancel-message">This event has been canceled</span>
+                <span v-else-if="towerEvent.capacity == towerEvent.ticketCount" class="sold-out-message">This event is sold out</span>
+                <span v-else class="fs-5">This event is scheduled for:  <b>{{ towerEvent.startDate.toLocaleDateString() }}</b></span>
+            </div>
 
-            <img class="img-fluid" :src="towerEvent.coverImg" alt="">
+            <img class="img-fluid w-100 mt-2 mb-3 image-background" :src="towerEvent.coverImg" alt="">
+
             <!-- TODO add description, location, type from towerevent -->
             <p>{{ towerEvent.description }}</p>
-            <p>{{ towerEvent.location }}</p>
-            <p>{{ towerEvent.type }}</p>
         </div>
         <div class="row">
             <div class="col-7">
+                <p><b>Location: </b>{{ towerEvent.location }}</p>
+                <p><b>Event Type: </b>{{ towerEvent.type }}</p>
                 <div v-if="account?.id == towerEvent.creatorId && towerEvent.isCanceled == false" class="cancelEvent">
                     <button @click="cancelEvent()" class="btn btn-danger">Cancel Event</button>
                 </div>
@@ -143,20 +147,26 @@ async function deleteComment(commentId){
                 <!-- <ActiveTowerEvent/> -->
                 <div>
                     <!-- TODO Comment Section -->
-                    <CreateCommentForm/>
-                    <div v-for="comment in comments" :key="comment.id" class="col-md-4">
-                        <img class="img-fluid" :src="comment.creator.picture" alt="Profile Picture">
-                        <p class="fs-5">{{ comment.creator.name }}</p>
-                        <p>{{ comment.body }}</p>
-                        <div v-if="comment.creatorId == AppState.account.id">
-                            <button class="btn btn-danger" @click="deleteComment(comment.id)">Delete Comment</button>
+                    <div class="mb-5">
+                        <CreateCommentForm/>
+                        <div v-for="comment in comments" :key="comment.id" class="col-12 rounded mb-2 comment-card mt-3 p-2">
+                            <div class="d-flex align-items-center">
+                                <img class="img-fluid comment-profile-picture" :src="comment.creator.picture" alt="Profile Picture">
+                                <p class="fs-5">{{ comment.creator.name }}</p>
+                            </div>
+                            <div class="pt-4">
+                                <p>{{ comment.body }}</p>
+                            </div>
+                            <div v-if="comment.creatorId == AppState.account.id" class="text-end">
+                                <button class="btn btn-danger" @click="deleteComment(comment.id)"><i class="mdi mdi-delete"></i></button>
+                            </div>
                         </div>
-                    </div>  
+                    </div>
                 </div>
             </div>
             <!-- TODO Add UI indication to show if the account profile has a ticket to the event -->
             <!-- NOTE Can we compare the account profile's eventId to the activeTowerEvent's id?? -->
-            <div class="col-3">
+            <div class="col-5">
                 <div class="tickets text-center">
                     <div v-if="ticketHolder">
                         <h4>You are attending this event!</h4>
@@ -169,13 +179,23 @@ async function deleteComment(commentId){
                         <p>Tickets Remaining: {{ towerEvent.capacity - towerEvent.ticketCount }}</p>
                     </div>
                     <div v-if="towerEvent.isCanceled == true">
-                        <button disabled @click="createTicket()" class="btn btn-primary">Get a Ticket</button>
+                        <button disabled @click="createTicket()" class="btn btn-primary mb-4">Get a Ticket</button>
                     </div>
                     <div v-else-if="towerEvent.capacity <= towerEvent.ticketCount">
-                        <button disabled @click="createTicket()" class="btn btn-primary">Get a Ticket</button>
+                        <button disabled @click="createTicket()" class="btn btn-primary mb-4">Get a Ticket</button>
                     </div>
-                    <div v-else><button @click="createTicket()" class="btn btn-primary">Get a Ticket</button></div>
+                    <div v-else><button @click="createTicket()" class="btn btn-primary mb-4">Get a Ticket</button></div>
                 </div>
+                    <div class="mt-3 attendees-section rounded">
+                    <p class="fs-3 text-center">Event Attendees</p>
+                    <hr/>
+                        <div class="row g-1 pb-2">
+                            <div v-for="ticket in eventProfiles" :key="ticket.id" class="d-flex align-items-center">
+                            <img class="img-fluid profile-picture" :src="ticket.profile.picture" alt="Profile Picture">
+                            <p class="fs-5">{{ ticket.profile.name }}</p>
+                            </div>          
+                        </div>
+                    </div>
             </div>
         </div>
     </div>
@@ -184,18 +204,17 @@ async function deleteComment(commentId){
     </div>
 
      <!-- Attendees Section -->
-    <div class="row">
+    <!-- <div class="row">
         <div class="col-md-4">
             <h4>Event Attendees</h4>
             <div class="row g-1">
-                <!-- TODO Only show attendee once, even if they have multiple tickets -->
                 <div v-for="ticket in eventProfiles" :key="ticket.id" class="col-md-4">
                     <img class="img-fluid" :src="ticket.profile.picture" alt="Profile Picture">
                     <p class="fs-5">{{ ticket.profile.name }}</p>
                 </div>          
             </div>
         </div>
-    </div>
+    </div> -->
 </section>
 
 
@@ -215,5 +234,39 @@ async function deleteComment(commentId){
     color: red;
     font-size: 1.5em;
     font-weight: 700;
+}
+
+.image-background {
+    object-fit: cover;
+    object-position: center;
+    height: 100vh;
+}
+
+.profile-picture {
+    object-fit: cover;
+    object-position: center;
+    aspect-ratio: 1/1;
+    border-radius: 50%;
+    height: 4em;
+    margin-left: 1em;
+    margin-right: 3em;
+}
+
+.comment-profile-picture {
+    object-fit: cover;
+    object-position: center;
+    aspect-ratio: 1/1;
+    border-radius: 50%;
+    height: 4em;
+    margin-left: 1em;
+    margin-right: 1em;
+}
+
+.attendees-section {
+    background-color: rgb(206, 221, 242);
+}
+
+.comment-card {
+    border: 1px solid black;
 }
 </style>

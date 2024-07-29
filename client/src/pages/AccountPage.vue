@@ -16,6 +16,7 @@ onMounted(() => getAccountTicketsForEvents())
 async function deleteTicket(ticketId){
   try {
     const wantsToDelete = await Pop.confirm("Are you sure that you no longer what this ticket?")
+    if(!wantsToDelete) return
     await ticketsService.deleteTicket(ticketId)
   } catch (error) {
     Pop.error(error)
@@ -41,10 +42,10 @@ async function getAccountTicketsForEvents() {
       <p>{{ account.email }}</p>
       <section class="container">
         <div class="row">
-          <div v-for="accountEvent in accountEvents" :key="accountEvent.id" class="col-md-4">
-            {{accountEvent.towerEvent.name }}
+          <div v-for="accountEvent in accountEvents" :key="accountEvent.id" class="col-md-3 col-12">
+            <!-- {{accountEvent.towerEvent.name }} -->
             <TowerEventDetails :towerEvent="accountEvent.towerEvent"/>
-            <button @click="deleteTicket(accountEvent.id)" class="btn btn-danger">Delete Ticket</button>
+            <button @click="deleteTicket(accountEvent.id)" class="btn btn-danger mb-3"><i class="mdi mdi-delete"></i></button>
           </div>
         </div>
       </section>
