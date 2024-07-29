@@ -13,6 +13,9 @@ import { Account } from '../models/Account.js';
 import { ticketsService } from '../services/TicketsService.js';
 import { Ticket } from '../models/Ticket.js';
 import App from '../App.vue';
+import { commentsService } from '../services/CommentsService.js';
+import ModalWrapper from '../components/ModalWrapper.vue';
+import CreateCommentForm from '../components/CreateCommentForm.vue';
 
 
 
@@ -24,9 +27,21 @@ const account = computed(() => AppState.account)
 
 const eventProfiles = computed(() => AppState.eventProfiles)
 
-const ticketHolder = computed(() => AppState.eventProfiles.find(ticket => ticket.accountId == AppState.account.id)
- 
-)
+const ticketHolder = computed(() => {
+    if(!AppState.account){
+        logger.log('Appstate Account not ready.')
+    }
+    if(AppState.eventProfiles && AppState.account){
+        const foundTicket = AppState.eventProfiles.find(ticket => ticket.accountId == AppState.account.id)
+        logger.log('AppState.eventProfile:', AppState.eventProfiles)
+        logger.log('AppState.account:',AppState.account)
+        logger.log('Found Ticket:', foundTicket)
+        return foundTicket
+    }
+    return null
+})
+
+const comments = computed(() => AppState.eventComments)
 
 
 // TODO go get people that have tickets for event when this page mounts, use eventId form route params for the request, reference get AlbumMemberProfiles from postit
@@ -35,6 +50,7 @@ const ticketHolder = computed(() => AppState.eventProfiles.find(ticket => ticket
 onMounted(() => {
     getTowerEventById()
     getTicketsForEvent()
+    // getEventComments()
 })
 
 
@@ -78,6 +94,15 @@ async function getTicketsForEvent() {
       Pop.error(error);
     }
 }
+
+async function getEventComments(){
+    try {
+      await commentsService.getEventComments(route.params.eventId)
+    }
+    catch (error){
+      Pop.error(error);
+    }
+}
 </script>
 
 
@@ -105,18 +130,18 @@ async function getTicketsForEvent() {
                 <!-- <ActiveTowerEvent/> -->
                 <div>
                     <!-- TODO Comment Section -->
-                    <h4>See what folks are saying...</h4>
-                    <form>
-                        <textarea name="comment-section" id="comment-section" placeholder="Tell the people..."></textarea>
-                        <button class="btn btn-success">Post Comment</button>
-                    </form>
+                    <CreateCommentForm/>
+                    <div v-for="comment in comments" :key="comment.id" class="col-md-4">
+                        <img class="img-fluid" :src="comment.creator.picture" alt="Profile Picture">
+                        <p class="fs-5">{{ comment.creator.name }}</p>
+                        <p>{{ comment.body }}</p>
+                    </div>  
                 </div>
             </div>
             <!-- TODO Add UI indication to show if the account profile has a ticket to the event -->
             <!-- NOTE Can we compare the account profile's eventId to the activeTowerEvent's id?? -->
             <div class="col-3">
                 <div class="tickets text-center">
-                    <!-- FIXME Logic doesn't work here -->
                     <div v-if="ticketHolder">
                         <h4>You are attending this event!</h4>
                     </div>
