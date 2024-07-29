@@ -15,7 +15,7 @@ const towerEventData = ref({
    name: '',
    coverImg: '',
    description: '',
-   startDate: '',
+   startDate: new Date().toLocaleDateString(),
    location: '',
     type: '',
     capacity: 0
